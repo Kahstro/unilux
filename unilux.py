@@ -6,32 +6,32 @@ from wtforms.validators import DataRequired
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///unilux.db'
+app.config['SECRET_KEY'] = 'sbisabxouw2oboe3038308h0asjs'
 db=SQLAlchemy(app)
 
-class cadastro(FlaskForm):
+class cadastroForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable=False)
-    senha = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(30), unique=True, nullable=False)
     
     def __repr__(self):
-        return '<User %r>' % self.username
-
-@app.route('/enviar', methods=('GET', 'POST'))
-def enviar():
-    form = cadastro()
-    if form.validate_on_submit():
-        return render_template('feed.html', form=form)
+        return '<User %r>' % self.name
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/cadastro')
+@app.route('/cadastro', methods=['POST', 'GET'])
 def cadastro():
-    return render_template('cadastro.html')
+    form = cadastroForm()
+    if form.validate_on_submit():
+        user1 = User()
+        user1.name = form.name.data
+        db.session.add(user1)
+        db.session.commit()
+    return render_template('cadastro.html', form=form)
     
 @app.route('/login')
 def login():
