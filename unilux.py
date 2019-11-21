@@ -1,9 +1,15 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///unilux.db'
 db=SQLAlchemy(app)
+
+class cadastro(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,6 +18,12 @@ class User(db.Model):
     
     def __repr__(self):
         return '<User %r>' % self.username
+
+@app.route('/enviar', methods=('GET', 'POST'))
+def enviar():
+    form = cadastro()
+    if form.validate_on_submit():
+        return render_template('feed.html', form=form)
 
 @app.route('/')
 def index():
