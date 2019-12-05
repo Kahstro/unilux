@@ -3,3 +3,13 @@
 {% block title %}
 Login
 {% endblock %}
+
+{% block body %}
+<form method="POST" style="text-align: center;">
+    {{ form.csrf_token }}
+    {{ form.email.label }} <br/> {{ form.email(size=20) }}<br/>
+    {{ form.senha.label }} <br/> {{ form.senha(size=20) }}<br/>
+    {{ form.lembrar.label }} <br/> {{ form.lembrar(size=20) }}<br/>
+    <button type="submit" class="btn btn-primary">Entrar</button>
+</form>
+{% endblock %}
